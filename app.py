@@ -19,10 +19,11 @@ if __name__ == '__main__':
         train_arr , test_arr,_= data_transformation.initiate_data_transformation(train_data_path, test_data_path)
         ## Model Training
         model_trainer = ModelTrainer()
-        r2_square , best_model_name , best_model_score = model_trainer.initiate_model_trainer(train_arr, test_arr)
+        r2_square , best_model_name , best_model_score, authenticity = model_trainer.initiate_model_trainer(train_arr, test_arr)
         print(f"Best Model Name: {best_model_name}")
         print(f"Best Model Score: {best_model_score}")
         print(f"R2 Score: {r2_square}")
+        print(f"Authenticity: {authenticity}")
 
 
 

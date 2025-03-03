@@ -75,10 +75,10 @@ class DataTransformation:
             target_column_name = 'classification' 
             #numeric_features = [feature for feature in train_data.columns if train_data[feature].dtype != 'O']
 
-            input_features_train_df = train_data
+            input_features_train_df = train_data.drop("id", axis = 1)
             target_feature_train_df = train_data[target_column_name] 
 
-            input_feature_test_df = test_data
+            input_feature_test_df = test_data.drop("id", axis = 1)
             target_feature_test_df = test_data[target_column_name]
             logging.info("Applying Preprocessing on Train Data and Test Data")
              # Encode the target variable

@@ -1,0 +1,62 @@
+<html>
+    <body>
+        <div class = "login">
+            <h1> CKD Project</h1>
+            <form action="{{url_for('predict_datapoint')}}" method="post">
+            <h3>
+                <legend> CKD Detection Using Random Forest</legend>
+
+            </h3>
+            <div class="mb-3">
+                <label class = "form-label"> Age</label>
+                <input type="number" class="form-control" name="age" placeholder="Enter Age" required>
+            </div>
+            <br>
+            <div class="mb-3"> 
+                <label class="form-label">Blood Pressure </label>
+                <input type="number" class="form-control" name="bp" placeholder="Enter Blood Pressure" required>
+            </div>
+            <br>
+            <div class="mb-3">
+                <label class = "form-label"> Blood Sugar </label>
+                <input type="number" class = "form-control" name="bgr" placeholder="Enter Blood Glucose" required>
+
+            </div>
+            <br>
+            <div class="mb-3">
+                <label class = "form-label"> Blood Urea Nitrogen </label>
+                <select class="form-control" name = "bu" placeholder="Blood Urea Nitrogen" required>
+                    <option class = "placeholder" selected disabled value=""> Select Blood Urea Status</option>
+                    <option value="yes"> Yes</option>
+                    <option value="no"> No </option>
+            </div>
+            <br>
+            <div class="mb-3">
+                <label class = "form-label"> Heamoglobin </label>
+                <input type="number" class = "form-control" name="hemo" placeholder="Enter Haemoglobin" required>
+
+            </div>
+            <br>
+            <div class="mb-3">
+                <label class = "form-label"> HyperTension</label>
+                <select class="form-control" name = "htn" placeholder="HyperTension" required>
+                <option class = "placeholder" selected disabled value=""> Select HyperTension Status</option>
+                <option value="yes"> Yes</option>
+                <option value="no"> No </option>
+                </select>
+
+            </div>
+            <br>
+            <div>
+                <input class="btn btn-primary" type = "submit" value = "Predict your CKD Stage">
+            </div>
+            <br>
+            
+            <h2>
+                The  prediction is {{results}}
+             </h2>
+            </form>
+        </div>
+            
+    </body>
+</html>

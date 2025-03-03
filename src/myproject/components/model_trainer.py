@@ -9,7 +9,7 @@ from sklearn.ensemble import (
     RandomForestRegressor,
 )
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
+from sklearn.metrics import confusion_matrix, r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBRegressor
@@ -106,7 +106,9 @@ class ModelTrainer:
             save_object(file_path= self.model_trainer_config.trained_model_file_path, obj=best_model)
             predicted = best_model.predict(X_test)
             r2_square = r2_score(y_test, predicted)
-            return r2_square , best_model_name , best_model_score
+
+            authenticity = confusion_matrix(y_test, predicted)
+            return r2_square , best_model_name , best_model_score , authenticity
 
         except Exception as e:
             raise CustomException(e,sys)
