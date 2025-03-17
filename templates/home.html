@@ -1,6 +1,29 @@
 <html>
+    <head>
+        <style>
+            body {
+                font-family: sans-serif;
+                text-align: center;
+                margin-top: 50px;
+            }
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            .button {
+                display: inline-block;
+                padding: 15px 30px;
+                font-size: 18px;
+                text-decoration: none;
+                background-color: #4CAF50;
+                color: white;
+                border-radius: 5px;
+                margin-top: 30px;
+            }
+            </style>
+    </head>
     <body>
-        <div class = "login">
+        <div class = "data container">
             <h1> CKD Project</h1>
             <form action="{{url_for('predict_datapoint')}}" method="post">
             <h3>
