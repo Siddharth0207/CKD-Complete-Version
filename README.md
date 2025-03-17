@@ -12,3 +12,4 @@ We can create files or say directries manually one by one or we can create an te
 We can Do this by two methods:
 >creating "template.py" file which includes all the directories and sub directores adn its corresponding file.
 > we can use cookie cutter to create the same process
+https://www.reddit.com/r/aws/comments/13f2jdg/error_the_instance_profile/
