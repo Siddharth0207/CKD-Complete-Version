@@ -1,4 +1,9 @@
-from flask import Flask , request , render_template
+from flask import Flask, request, render_template
+from src.myproject.logger import logging
+
+# Set up logging
+
+
 import numpy as np 
 import pandas as pd 
 
@@ -30,15 +35,15 @@ def predict_datapoint():
             htn = request.form.get('htn')
         )
         pred_df = data.get_data_as_dataframe()
-        print(pred_df)
-         # Check and drop 'classification' column if it exists
-        if 'classification' in pred_df.columns:
-            pred_df = pred_df.drop(columns=['classification'])
+        logging.info(f"Input DataFrame for prediction: {pred_df}")
+
+        
         predict_pipeline = PredictPipeline()
         results = predict_pipeline.predict(pred_df)
         
-        return render_template('home.html', results = results[0])
+        logging.info(f"Prediction result: {results[0]}")
+        return render_template('home.html', results=results[0])
+
     
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug = True)
-    
