@@ -1,0 +1,23 @@
+Here is the comprehensive plan to address the issue of the missing 'classification' column in the prediction pipeline:
+
+### Plan:
+
+1. **Verify Raw Data**:
+   - Check the contents of the `notebook/data/raw_data.csv` file to ensure that it includes the 'classification' column. If it does not, we need to identify the source of the data and ensure that the 'classification' column is included in the dataset.
+
+2. **Update Data Ingestion**:
+   - If the 'classification' column is missing from the raw data, modify the data ingestion process to ensure that this column is included when reading the data. This may involve updating the SQL query or data source from which the raw data is being fetched.
+
+3. **Test Data Transformation**:
+   - After ensuring that the 'classification' column is present in the raw data, run the data transformation process to confirm that the column is correctly processed and included in the training and testing datasets.
+
+4. **Update Prediction Pipeline**:
+   - Ensure that the prediction pipeline is correctly set up to handle the input features, including the 'classification' column, during the prediction process.
+
+5. **Testing**:
+   - After making the necessary changes, run tests to verify that the prediction pipeline works correctly without raising the 'columns are missing' error.
+
+### Follow-up Steps:
+- Review the raw data file to confirm the presence of the 'classification' column.
+- Implement any necessary changes to the data ingestion process.
+- Test the entire pipeline to ensure that predictions can be made successfully.

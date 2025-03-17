@@ -36,7 +36,7 @@ class DataTransformation:
             logging.info("Data Transformation has been initiated")
             logging.info("Reading from MySQL Database")
             numeric_features = ['age','bp','bgr','bu','hemo']
-            categorical_features = ['htn','classification']
+            categorical_features = ['htn']
             num_pipeline = Pipeline(steps = [("imputer", SimpleImputer(strategy = 'median')),
                                              ('scalar', StandardScaler())
                                              ])
@@ -70,17 +70,23 @@ class DataTransformation:
             logging.info("Data Transformation has been initiated")
             logging.info("Transforming the data")
 
+            logging.info(f"Train Data Columns: {train_data.columns}")
+            logging.info(f"Test Data Columns: {test_data.columns}")
+
             preprocessor_obj = self.get_data_transformer_object()
 
             target_column_name = 'classification' 
+            if target_column_name not in train_data.columns or target_column_name not in test_data.columns:
+                raise ValueError(f"Target column '{target_column_name}' not found in the data")
             #numeric_features = [feature for feature in train_data.columns if train_data[feature].dtype != 'O']
 
-            input_features_train_df = train_data.drop("id", axis = 1)
+            input_features_train_df = train_data.drop(columns=["id", target_column_name])
             target_feature_train_df = train_data[target_column_name] 
 
-            input_feature_test_df = test_data.drop("id", axis = 1)
+            input_feature_test_df = test_data.drop(columns=["id", target_column_name])
             target_feature_test_df = test_data[target_column_name]
             logging.info("Applying Preprocessing on Train Data and Test Data")
+            
              # Encode the target variable
             label_encoder = LabelEncoder()
             target_feature_train_encoded = label_encoder.fit_transform(target_feature_train_df)
