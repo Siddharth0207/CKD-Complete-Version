@@ -10,6 +10,7 @@ from sklearn.compose import ColumnTransformer
 
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
+from scipy.sparse import csr_matrix
 
 from src.myproject.exception import CustomException
 from src.myproject.logger import logging
@@ -35,8 +36,8 @@ class DataTransformation:
            
             logging.info("Data Transformation has been initiated")
             logging.info("Reading from MySQL Database")
-            numeric_features = ['age','bp','bgr','bu','hemo']
-            categorical_features = ['htn']
+            numeric_features = ['age','bp','bgr','hemo']
+            categorical_features = ['htn','bu']
             num_pipeline = Pipeline(steps = [("imputer", SimpleImputer(strategy = 'median')),
                                              ('scalar', StandardScaler())
                                              ])
@@ -59,12 +60,7 @@ class DataTransformation:
         
 
     def initiate_data_transformation(self, train_path, test_path):
-        """
-        This function is responsible for initiating the data transformation
-        
-        """
         try:
-            
             train_data = pd.read_csv(train_path)
             test_data = pd.read_csv(test_path)
             logging.info("Data Transformation has been initiated")
@@ -75,43 +71,55 @@ class DataTransformation:
 
             preprocessor_obj = self.get_data_transformer_object()
 
-            target_column_name = 'classification' 
+            target_column_name = 'classification'
             if target_column_name not in train_data.columns or target_column_name not in test_data.columns:
                 raise ValueError(f"Target column '{target_column_name}' not found in the data")
-            #numeric_features = [feature for feature in train_data.columns if train_data[feature].dtype != 'O']
 
             input_features_train_df = train_data.drop(columns=["id", target_column_name])
-            target_feature_train_df = train_data[target_column_name] 
+            target_feature_train_df = train_data[target_column_name]
 
             input_feature_test_df = test_data.drop(columns=["id", target_column_name])
             target_feature_test_df = test_data[target_column_name]
+
             logging.info("Applying Preprocessing on Train Data and Test Data")
-            
-             # Encode the target variable
+
+            #print("target_feature_train_df shape:", target_feature_train_df.shape)
+            #print("target_feature_train_df head:", target_feature_train_df.head())
+
             label_encoder = LabelEncoder()
             target_feature_train_encoded = label_encoder.fit_transform(target_feature_train_df)
             target_feature_test_encoded = label_encoder.transform(target_feature_test_df)
 
-            input_feature_train_arr = preprocessor_obj.fit_transform(input_features_train_df)
+            input_feature_train_arr = preprocessor_obj.fit_transform(input_features_train_df) # Move this line up.
             input_feature_test_arr = preprocessor_obj.transform(input_feature_test_df)
 
-
-            train_arr = np.c_[input_feature_train_arr, target_feature_train_encoded]
-            test_arr = np.c_[input_feature_test_arr, target_feature_test_encoded]
-
-
-
+             # Convert sparse matrix to dense array
+            if isinstance(input_feature_train_arr, csr_matrix):
+                input_feature_train_arr = input_feature_train_arr.toarray()
+            if isinstance(input_feature_test_arr, csr_matrix):
+                input_feature_test_arr = input_feature_test_arr.toarray()
             
+            #print("input_feature_train_arr shape:", input_feature_train_arr.shape) # Move this line down.
+            #print("input_feature_train_arr head:", input_feature_train_arr[:5])
+
+            target_feature_train_encoded = target_feature_train_encoded.reshape(-1, 1)
+            target_feature_test_encoded = target_feature_test_encoded.reshape(-1, 1)
+
+            #print("target_feature_train_encoded shape:", target_feature_train_encoded.shape)
+
+            train_arr = np.hstack((input_feature_train_arr, target_feature_train_encoded))
+            test_arr = np.hstack((input_feature_test_arr, target_feature_test_encoded))
+
             logging.info(f"Saved Preprocessor Object")
             save_object(
-                file_path = self.data_transformation_config.preprocessor_obj_file_path,
-                obj = preprocessor_obj
+                file_path=self.data_transformation_config.preprocessor_obj_file_path,
+                obj=preprocessor_obj
             )
             return (
-                train_arr ,
+                train_arr,
                 test_arr,
                 self.data_transformation_config.preprocessor_obj_file_path
             )
         except Exception as e:
-            raise CustomException(e,sys)
+            raise CustomException(e, sys)
             

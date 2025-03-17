@@ -26,11 +26,11 @@ class PredictPipeline:
 
 class CustomData:
     def __init__(self,
-                 age: int,
-                 bp: int,
-                 bgr: int,
+                 age: float,
+                 bp: float,
+                 bgr: float,
                  bu:str,
-                 hemo: int,
+                 hemo: float,
                  htn: str):
         self.age = age
         self.bp = bp
