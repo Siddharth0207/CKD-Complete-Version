@@ -1,5 +1,10 @@
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CKD Project</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
                 font-family: sans-serif;
@@ -21,68 +26,96 @@
                 margin-top: 30px;
             }
             </style>
+            <script>
+                function fillSampleData(type) {
+                    if (type === 'ckd') {
+                        document.getElementById('age').value = 65;
+                        document.getElementById('bp').value = 80;
+                        document.getElementById('bgr').value = 150;
+                        document.getElementById('bu').value = 'yes';
+                        document.getElementById('hemo').value = 10;
+                        document.getElementById('htn').value = 'yes';
+                    } else if (type === 'notckd') {
+                        document.getElementById('age').value = 45;
+                        document.getElementById('bp').value = 70;
+                        document.getElementById('bgr').value = 90;
+                        document.getElementById('bu').value = 'no';
+                        document.getElementById('hemo').value = 15;
+                        document.getElementById('htn').value = 'no';
+                    }
+                }
+                function clearOutput() {
+                    document.getElementById('result').innerHTML = '';
+                }
+                window.onload = function() {
+                    document.getElementById('age').value = '';
+                    document.getElementById('bp').value = '';
+                    document.getElementById('bgr').value = '';
+                    document.getElementById('bu').value = '';
+                    document.getElementById('hemo').value = '';
+                    document.getElementById('htn').value = '';
+                }
+                
+            </script>
     </head>
     <body>
         <div class = "data container">
-            <h1> CKD Project</h1>
+            <h1> CKD Prediction Based on Kaggle Dataset</h1>
             <form action="{{url_for('predict_datapoint')}}" method="post">
-            <h3>
-                <legend> CKD Detection Using Machine Learning Algorithm</legend>
-
-            </h3>
-            <p>
-                Please enter the following details to predict your CKD stage. Output '1' indicates that you have CKD and '0' indicates that you do not have CKD.
-            </p>
-            <div class="mb-3">
-                <label class = "form-label"> Age</label>
-                <input type="number" class="form-control" name="age" placeholder="Enter Age" required>
-            </div>
-            <br>
-            <div class="mb-3"> 
-                <label class="form-label">Blood Pressure </label>
-                <input type="number" class="form-control" name="bp" placeholder="Enter Blood Pressure" required>
-            </div>
-            <br>
-            <div class="mb-3">
-                <label class = "form-label"> Blood Sugar </label>
-                <input type="number" class = "form-control" name="bgr" placeholder="Enter Blood Glucose" required>
-
-            </div>
-            <br>
-            <div class="mb-3">
-                <label class = "form-label"> Blood Urea Nitrogen </label>
-                <select class="form-control" name = "bu" placeholder="Blood Urea Nitrogen" required>
-                    <option class = "placeholder" selected disabled value=""> Select Blood Urea Status</option>
-                    <option value="yes"> Yes</option>
-                    <option value="no"> No </option>
-            </div>
-            <br>
-            <div class="mb-3">
-                <label class = "form-label"> Heamoglobin </label>
-                <input type="number" class = "form-control" name="hemo" placeholder="Enter Haemoglobin" required>
-
-            </div>
-            <br>
-            <div class="mb-3">
-                <label class = "form-label"> HyperTension</label>
-                <select class="form-control" name = "htn" placeholder="HyperTension" required>
-                <option class = "placeholder" selected disabled value=""> Select HyperTension Status</option>
-                <option value="yes"> Yes</option>
-                <option value="no"> No </option>
-                </select>
-
-            </div>
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" class="form-control" id="age" name="age" placeholder="Enter Age" required>
+                </div>
+                <div class="form-group">
+                    <label for="bp">Blood Pressure</label>
+                    <input type="number" class="form-control" id="bp" name="bp" placeholder="Enter Blood Pressure" required>
+                </div>
+                <div class="form-group">
+                    <label for="bgr">Blood Sugar</label>
+                    <input type="number" class="form-control" id="bgr" name="bgr" placeholder="Enter Blood Glucose" required>
+                </div>
+                <div class="form-group">
+                    <label for="bu">Blood Urea Nitrogen</label>
+                    <select class="form-control" id="bu" name="bu" required>
+                        <option selected disabled value="">Select Blood Urea Status</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="hemo">Hemoglobin</label>
+                    <input type="number" class="form-control" id="hemo" name="hemo" placeholder="Enter Hemoglobin" required>
+                </div>
+                <div class="form-group">
+                    <label for="htn">Hypertension</label>
+                    <select class="form-control" id="htn" name="htn" required>
+                        <option selected disabled value="">Select Hypertension Status</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
             <br>
             <div>
                 <input class="btn btn-primary" type = "submit" value = "Predict your CKD Stage">
             </div>
             <br>
-            
-            <h2>
-                The  prediction is {{results}}
-             </h2>
+            <div id="result">
+                {% if results is not none %}
+                <h2>The prediction is {{results}}</h2>
+                {% endif %}
+            </div>
             </form>
+            
+            
+            <br>
+            <button class="btn btn-secondary" onclick="fillSampleData('ckd')">Fill "CKD" Sample Data</button>
+            <button class="btn btn-secondary" onclick="fillSampleData('notckd')">Fill "Not CKD" Sample Data</button>
+            <button class="btn btn-secondary" onclick="clearOutput()">Clear Output</button>
         </div>
+         <!-- Bootstrap JS and dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
             
     </body>
 </html>

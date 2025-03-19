@@ -66,9 +66,6 @@ class DataTransformation:
             logging.info("Data Transformation has been initiated")
             logging.info("Transforming the data")
 
-            logging.info(f"Train Data Columns: {train_data.columns}")
-            logging.info(f"Test Data Columns: {test_data.columns}")
-
             preprocessor_obj = self.get_data_transformer_object()
 
             target_column_name = 'classification'
@@ -83,12 +80,19 @@ class DataTransformation:
 
             logging.info("Applying Preprocessing on Train Data and Test Data")
 
-            #print("target_feature_train_df shape:", target_feature_train_df.shape)
-            #print("target_feature_train_df head:", target_feature_train_df.head())
+
+
+            # Log the classification column before transformation
+            logging.info(f"Train Classification Column: {target_feature_train_df.head()}")
+            logging.info(f"Test Classification Column: {target_feature_test_df.head()}")
 
             label_encoder = LabelEncoder()
             target_feature_train_encoded = label_encoder.fit_transform(target_feature_train_df)
             target_feature_test_encoded = label_encoder.transform(target_feature_test_df)
+
+             # Log the classification column after transformation
+            logging.info(f"Encoded Train Classification Column: {target_feature_train_encoded[:5]}")
+            logging.info(f"Encoded Test Classification Column: {target_feature_test_encoded[:5]}")
 
             input_feature_train_arr = preprocessor_obj.fit_transform(input_features_train_df) # Move this line up.
             input_feature_test_arr = preprocessor_obj.transform(input_feature_test_df)
